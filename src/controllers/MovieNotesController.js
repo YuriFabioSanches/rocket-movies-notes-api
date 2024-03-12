@@ -1,6 +1,36 @@
 const knex = require("../database/knex");
 const AppError = require("../utils/AppError");
 class MovieNotesController {
+  async index(request, response) {
+    const { user_id, title } = request.query;
+
+    if(user_id) {
+      const [user] = await knex("users").where({ id: user_id })
+      if(!user) {
+        throw new AppError("User not found.")
+      }
+    }
+
+    let movie_notes;
+
+    if(!user_id){
+      movie_notes = await knex("movie_notes")
+      .whereLike("title", `%${title}%`)
+      .orderBy("created_at");
+    }else {
+      movie_notes = await knex("movie_notes")
+      .where({ user_id })
+      .whereLike("title", `%${title}%`)
+      .orderBy("created_at");
+    }
+
+    if(movie_notes.length == 0){
+      return response.status(200).json({message: "No notes found"})
+    }
+
+    return response.status(200).json(movie_notes)
+  };
+
   async show(request, response) {
     const { id } = request.params;
 

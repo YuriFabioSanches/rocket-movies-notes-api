@@ -4,6 +4,7 @@ const movieNotesRoutes = Router();
 const MovieNotesController = require("../controllers/MovieNotesController");
 const movieNotesController = new MovieNotesController();
 
+movieNotesRoutes.get("/", movieNotesController.index)
 movieNotesRoutes.get("/:id", movieNotesController.show)
 movieNotesRoutes.post("/:user_id", ratingMiddleware, movieNotesController.create);
 movieNotesRoutes.put("/:id", ratingMiddleware, movieNotesController.update);
