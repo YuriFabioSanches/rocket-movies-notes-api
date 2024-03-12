@@ -3,6 +3,29 @@ const knex = require("../database/knex");
 const { hash, compare } = require("bcryptjs");
 
 class UserController {
+  async show(request, response){
+    const { id } = request.params;
+
+    const [user] = await knex("users").where({ id });
+
+    if(!user){
+      throw new AppError("User not found.");
+    }
+
+    const userInfo = [user].map(prop => {
+      return {
+        id: prop.id,
+        name: prop.name,
+        email: prop.email,
+        avatar: prop.avatar,
+        created_at: prop.created_at,
+        updated_at: prop.updated_at
+      }
+    });
+
+    return response.status(200).json(userInfo);
+  };
+
   async create(request, response) {
     const { name, email, password } = request.body;
 
@@ -58,7 +81,7 @@ class UserController {
 
       if(!checkOldPassword){
         throw new AppError("Your old password is wrong.");
-      }
+      };
 
       const newHashPassword = await hash(password, 8);
       user.password = newHashPassword;
