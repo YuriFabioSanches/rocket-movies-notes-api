@@ -5,7 +5,7 @@ class MovieNotesController {
     const { id } = request.params;
 
     const movie_note = await knex("movie_notes").where({ id }).first();
-    
+
     if(!movie_note){
       throw new AppError("Note don't exist.");
     };
@@ -51,6 +51,25 @@ class MovieNotesController {
     return response.status(201).json({message: "Movie note created"});
   };
 
+  async update(request, response) {
+    const { title, description, rating } = request.body;
+    const { id } = request.params;
+
+    const [note] = await knex("movie_notes").where({ id });
+    if(!note) {
+      throw new AppError("Note don't exist.");
+    };
+
+    note.title = title ?? note.title;
+    note.description = description ?? note.description;
+    note.rating = rating ?? note.rating;
+    note.updated_at = knex.fn.now();
+
+    await knex("movie_notes").update(note).where({ id });
+
+    return response.status(200).json({message: "Note Updated"})
+  };
+
   async delete(request, response) {
     const { id } = request.params
 
@@ -62,7 +81,7 @@ class MovieNotesController {
     await knex("movie_notes").where({ id }).delete()
 
     return response.status(200).json({message: "Movie note deleted"})
-  }
+  };
 };
 
 module.exports = MovieNotesController;
