@@ -3,7 +3,7 @@ const knex = require("../database/knex");
 const { hash, compare } = require("bcryptjs");
 
 class UserController {
-  async show(request, response){
+  async show(request, response) {
     const { id } = request.params;
 
     const [user] = await knex("users").where({ id });
@@ -92,6 +92,27 @@ class UserController {
     await knex("users").update(user).where({ id });
 
     return response.status(200).json({message: "User updated"});
+  };
+
+  async delete(request, response) {
+    const { password } = request.body;
+    const { id } = request.params;
+
+    const [user] = await knex("users").where({ id });
+
+    if(!user){
+      throw new AppError("User not found.");
+    };
+
+    const checkPasswordToDelete = await compare(password, user.password);
+
+    if(!checkPasswordToDelete){
+      throw new AppError("Wrong password, can`t delete user.");
+    };
+
+    await knex("users").delete().where({ id });
+
+    return response.status(200).json({message: "User deleted"});
   };
 };
 
