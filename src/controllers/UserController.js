@@ -10,7 +10,7 @@ class UserController {
 
     if(!user){
       throw new AppError("User not found.");
-    }
+    };
 
     const userInfo = [user].map(prop => {
       return {
@@ -20,7 +20,7 @@ class UserController {
         avatar: prop.avatar,
         created_at: prop.created_at,
         updated_at: prop.updated_at
-      }
+      };
     });
 
     return response.status(200).json(userInfo);
@@ -65,7 +65,7 @@ class UserController {
       if(userWithEmailInUse && userWithEmailInUse.id != user.id) {
         throw new AppError("E-mail already registered.");
       };
-    }
+    };
 
     user.name = name ?? user.name;
     user.email = email ?? user.email;

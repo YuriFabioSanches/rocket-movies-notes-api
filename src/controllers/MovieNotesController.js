@@ -5,11 +5,11 @@ class MovieNotesController {
     const { user_id, title } = request.query;
 
     if(user_id) {
-      const [user] = await knex("users").where({ id: user_id })
+      const [user] = await knex("users").where({ id: user_id });
       if(!user) {
-        throw new AppError("User not found.")
-      }
-    }
+        throw new AppError("User not found.");
+      };
+    };
 
     let movie_notes;
 
@@ -22,13 +22,13 @@ class MovieNotesController {
       .where({ user_id })
       .whereLike("title", `%${title}%`)
       .orderBy("created_at");
-    }
+    };
 
     if(movie_notes.length == 0){
-      return response.status(200).json({message: "No notes found"})
-    }
+      return response.status(200).json({message: "No notes found"});
+    };
 
-    return response.status(200).json(movie_notes)
+    return response.status(200).json(movie_notes);
   };
 
   async show(request, response) {
@@ -66,14 +66,14 @@ class MovieNotesController {
 
     if(!tags){
       return response.status(201).json({message: "Movie note created"});
-    }
+    };
     
     const tagsInsert = tags.map(tag => {
       return {
         note_id,
         name: tag,
         user_id
-      }
+      };
     });
 
     await knex("movie_tags").insert(tagsInsert);
@@ -97,20 +97,20 @@ class MovieNotesController {
 
     await knex("movie_notes").update(note).where({ id });
 
-    return response.status(200).json({message: "Note Updated"})
+    return response.status(200).json({message: "Note Updated"});
   };
 
   async delete(request, response) {
-    const { id } = request.params
+    const { id } = request.params;
 
-    const [noteExist] = await knex("movie_notes").where({ id })
+    const [noteExist] = await knex("movie_notes").where({ id });
     if(!noteExist){
-      throw new AppError("Movie note does not exist.")
-    }
+      throw new AppError("Movie note does not exist.");
+    };
 
-    await knex("movie_notes").where({ id }).delete()
+    await knex("movie_notes").where({ id }).delete();
 
-    return response.status(200).json({message: "Movie note deleted"})
+    return response.status(200).json({message: "Movie note deleted"});
   };
 };
 

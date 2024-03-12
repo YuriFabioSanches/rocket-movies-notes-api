@@ -7,7 +7,7 @@ class MovieTagsController {
 
     const [user] = await knex("users").where({ id: user_id});
     if(!user) {
-      throw new AppError("User not found.")
+      throw new AppError("User not found.");
     };
 
     const movie_tags = await knex("movie_tags").where({ user_id });
