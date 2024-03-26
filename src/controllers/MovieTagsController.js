@@ -3,7 +3,7 @@ const AppError = require("../utils/AppError");
 
 class MovieTagsController {
   async index(request, response) {
-    const { user_id } = request.params;
+    const user_id = request.user.id
 
     const [user] = await knex("users").where({ id: user_id});
     if(!user) {
@@ -17,7 +17,6 @@ class MovieTagsController {
     };
 
     return response.status(200).json(movie_tags);
-
   };
 };
 

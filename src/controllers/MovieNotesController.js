@@ -2,7 +2,9 @@ const knex = require("../database/knex");
 const AppError = require("../utils/AppError");
 class MovieNotesController {
   async index(request, response) {
-    const { user_id, title } = request.query;
+    const { title } = request.query;
+    const user_id = request.user.id
+
 
     if(user_id) {
       const [user] = await knex("users").where({ id: user_id });
@@ -50,7 +52,8 @@ class MovieNotesController {
 
   async create(request, response) {
     const { title, description, rating, tags } = request.body;
-    const { user_id } = request.params;
+    const user_id = request.user.id
+
 
     const [checkUserExist] = await knex("users").where("id", user_id);
     if(!checkUserExist){
@@ -103,7 +106,8 @@ class MovieNotesController {
   async delete(request, response) {
     const { id } = request.params;
 
-    const [noteExist] = await knex("movie_notes").where({ id });
+    const noteExist = await knex("movie_notes").where({ id }).first();
+
     if(!noteExist){
       throw new AppError("Movie note does not exist.");
     };

@@ -1,4 +1,4 @@
-const AppError = require("./AppError");
+const AppError = require("../utils/AppError");
 
 function ratingMiddleware(request, response, next) {
   const { rating } = request.body;

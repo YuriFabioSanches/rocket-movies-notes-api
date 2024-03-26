@@ -4,9 +4,9 @@ const { hash, compare } = require("bcryptjs");
 
 class UserController {
   async show(request, response) {
-    const { id } = request.params;
+    const user_id = request.user.id
 
-    const [user] = await knex("users").where({ id });
+    const [user] = await knex("users").where({ id: user_id });
 
     if(!user){
       throw new AppError("User not found.");
@@ -51,9 +51,10 @@ class UserController {
 
   async update(request, response) {
     const { name, email, password, old_password } = request.body;
-    const { id } = request.params;
+    const user_id = request.user.id
 
-    const [user] = await knex("users").where({ id });
+
+    const [user] = await knex("users").where({ id: user_id });
 
     if(!user){
       throw new AppError("User not found.");
@@ -89,16 +90,16 @@ class UserController {
 
     user.updated_at = knex.fn.now();
 
-    await knex("users").update(user).where({ id });
+    await knex("users").update(user).where({ id: user_id });
 
     return response.status(200).json({message: "User updated"});
   };
 
   async delete(request, response) {
     const { password } = request.body;
-    const { id } = request.params;
+    const user_id = request.user.id
 
-    const [user] = await knex("users").where({ id });
+    const [user] = await knex("users").where({ id: user_id });
 
     if(!user){
       throw new AppError("User not found.");
@@ -110,7 +111,7 @@ class UserController {
       throw new AppError("Wrong password, can`t delete user.");
     };
 
-    await knex("users").delete().where({ id });
+    await knex("users").delete().where({ id: user_id });
 
     return response.status(200).json({message: "User deleted"});
   };
