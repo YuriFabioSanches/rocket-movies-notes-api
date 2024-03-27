@@ -1,3 +1,10 @@
 node_modules/
 
 database.db
+
+tmp/*
+!tmp/.gitkeep
+!tmp/uploads 
+
+tmp/uploads/*
+!tmp/uploads/.gitkeep 

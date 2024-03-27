@@ -3,11 +3,16 @@ const AppError = require("./utils/AppError");
 const sqlConnection = require("./database/sqlite");
 const routes = require("./routes");
 const express = require("express");
-const app = express();
+const cors = require("cors")
 
 sqlConnection();
 
+const app = express();
+
+app.use(cors());
+
 app.use(express.json());
+
 app.use(routes);
 
 app.use((error, request, response, next) => {
