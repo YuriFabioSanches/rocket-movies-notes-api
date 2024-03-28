@@ -105,15 +105,19 @@ class UserController {
       throw new AppError("User not found.");
     };
 
+    if(!password){
+      throw new AppError("Please inform your password to delete your profile.");
+    };
+
     const checkPasswordToDelete = await compare(password, user.password);
 
     if(!checkPasswordToDelete){
-      throw new AppError("Wrong password, can`t delete user.");
+      throw new AppError("Wrong password, can`t delete profile.");
     };
 
     await knex("users").delete().where({ id: user_id });
 
-    return response.status(200).json({message: "User deleted"});
+    return response.status(200).json({ deleted: true });
   };
 };
 
